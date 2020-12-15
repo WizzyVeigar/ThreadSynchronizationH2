@@ -9,41 +9,46 @@ namespace ThreadSynchronizationH2
 {
     class Consumer
     {
-        private List<int> buffer;
+        private int[] buffer;
 
-        public List<int> Buffer
+        public int[] Buffer
         {
             get { return buffer; }
             set { buffer = value; }
         }
 
-        public Consumer(List<int> buffer)
+        public Consumer(int[] buffer)
         {
             Buffer = buffer;
         }
+
 
 
         public void TakeGoods()
         {
             while (true)
             {
-                while (Buffer.Count > 0)
-                {
-                    if (Monitor.TryEnter(Buffer))
-                    {
-                        if (Buffer.Count == 0)
-                        {
-                            Console.WriteLine("Waiting on Produce");
-                            Monitor.Wait(buffer);
-                        }
+                Monitor.Enter(Buffer);
 
-                        Console.WriteLine("Removed from the buffer");
-                        Buffer.RemoveAt(Buffer.Count - 1);
-                        Monitor.Pulse(Buffer);
-                        Monitor.Exit(Buffer);
-                        Thread.Sleep(200);
+                while (Program.bufferCurrent == 0)
+                {
+                    Console.WriteLine(Thread.CurrentThread.ManagedThreadId + " Consumer waiting");
+                    Monitor.Wait(buffer);
+                }
+
+                Console.WriteLine(Thread.CurrentThread.ManagedThreadId + " Removed from the buffer");
+                for (int i = 0; i < Buffer.Length; i++)
+                {
+                    if (Buffer[i] != 0)
+                    {
+                        Buffer[i] = 0;
+                        i = Buffer.Length + 1;
+                        Program.bufferCurrent--;
                     }
                 }
+                Monitor.Pulse(Buffer);
+                Monitor.Exit(Buffer);
+                Thread.Sleep(1000);
             }
         }
 

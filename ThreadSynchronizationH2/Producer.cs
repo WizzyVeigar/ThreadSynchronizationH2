@@ -9,15 +9,16 @@ namespace ThreadSynchronizationH2
 {
     class Producer
     {
-        private List<int> buffer;
+        private int[] buffer;
 
-        public List<int> Buffer
+        public int[] Buffer
         {
             get { return buffer; }
             set { buffer = value; }
         }
 
-        public Producer(List<int> buffer)
+
+        public Producer(int[] buffer)
         {
             Buffer = buffer;
         }
@@ -27,22 +28,26 @@ namespace ThreadSynchronizationH2
         {
             while (true)
             {
-                if (Monitor.TryEnter(Buffer))
+                Monitor.Enter(Buffer);
+
+                while (Program.bufferCurrent > Buffer.Length)
                 {
-                    if (Buffer.Count > 4)
-                    {
-                        Console.WriteLine("Waiting on Sales");
-                        Monitor.Wait(buffer);
-                    }
-
-                    Console.WriteLine("Added to the buffer");
-                    Buffer.Add(random.Next(1, 10));
-
-
-                    Monitor.Pulse(Buffer);
-                    Monitor.Exit(Buffer);
-                    Thread.Sleep(200);
+                    Console.WriteLine(Thread.CurrentThread.ManagedThreadId + " Producer waiting");
+                    Monitor.Wait(buffer);
                 }
+
+                for (int i = 0; i < Buffer.Length; i++)
+                {
+                    if (Buffer[i] == 0)
+                    {
+                        Console.WriteLine(Thread.CurrentThread.ManagedThreadId + " Added to the buffer");
+                        Buffer[i] = random.Next(1, 10);
+                        i = Buffer.Length + 1;
+                        Program.bufferCurrent++;
+                    }
+                }
+                Monitor.Pulse(Buffer);
+                Monitor.Exit(Buffer);
             }
         }
     }

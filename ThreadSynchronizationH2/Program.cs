@@ -13,7 +13,8 @@ namespace ThreadSynchronizationH2
         //static int number = 0;
         public static Fork[] forkArray = new Fork[5];
         
-        public static List<int> buffer = new List<int>();
+        public static int[] buffer = new int[10];
+        public static int bufferCurrent = 0;
 
         static void Main(string[] args)
         {
@@ -41,12 +42,22 @@ namespace ThreadSynchronizationH2
             //}
 
             //Producer Consumer
-            //Consumer consumer = new Consumer(buffer);
-            //Producer producer = new Producer(buffer);
-            //Thread consumerThread = new Thread(consumer.TakeGoods);
-            //Thread producerThread = new Thread(producer.produceGood);
-            //consumerThread.Start();
-            //producerThread.Start();
+            Consumer consumer = new Consumer(buffer);
+            Consumer consumer2 = new Consumer(buffer);
+            Producer producer = new Producer(buffer);
+            Producer producer2 = new Producer(buffer);
+
+
+            Thread consumerThread = new Thread(consumer.TakeGoods);
+            Thread consumerThread2 = new Thread(consumer2.TakeGoods);
+            Thread producerThread = new Thread(producer.produceGood);
+            Thread producerThread2 = new Thread(producer.produceGood);
+
+            consumerThread.Start();
+            consumerThread2.Start();
+            producerThread.Start();
+
+
 
             Console.ReadKey();
         }
@@ -128,12 +139,12 @@ namespace ThreadSynchronizationH2
         //}
 
 
-        //public static void FillForkArray()
-        //{
-        //    for (int i = 0; i < forkArray.Length; i++)
-        //    {
-        //        forkArray[i] = new Fork("Fork " + i);
-        //    }
-        //}
+        public static void FillForkArray()
+        {
+            for (int i = 0; i < forkArray.Length; i++)
+            {
+                forkArray[i] = new Fork("Fork " + i);
+            }
+        }
     }
 }
