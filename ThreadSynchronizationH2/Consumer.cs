@@ -31,6 +31,12 @@ namespace ThreadSynchronizationH2
                 {
                     if (Monitor.TryEnter(Buffer))
                     {
+                        if (Buffer.Count == 0)
+                        {
+                            Console.WriteLine("Waiting on Produce");
+                            Monitor.Wait(buffer);
+                        }
+
                         Console.WriteLine("Removed from the buffer");
                         Buffer.RemoveAt(Buffer.Count - 1);
                         Monitor.Pulse(Buffer);

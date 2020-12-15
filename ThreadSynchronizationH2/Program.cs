@@ -17,16 +17,16 @@ namespace ThreadSynchronizationH2
 
         static void Main(string[] args)
         {
+            //Første opgave
             //ThreadPool.QueueUserWorkItem(AddByTwo, _lock);
             //ThreadPool.QueueUserWorkItem(MinusByOne, _lock);
-
             //Thread starThread = new Thread(WriteStars);
             //Thread fenceThread = new Thread(WriteFences);
             //starThread.Start();
             //fenceThread.Start();
 
+            //Dining Philosophers
             //FillForkArray();
-
             //List<Philosopher> philosophList = new List<Philosopher>() {
             //    new Philosopher("Philosph 1", forkArray[0], forkArray[1]),
             //    new Philosopher("Philosph 2", forkArray[1], forkArray[2]),
@@ -34,20 +34,19 @@ namespace ThreadSynchronizationH2
             //    new Philosopher("Philosph 4", forkArray[3], forkArray[4]),
             //    new Philosopher("Philosph 5", forkArray[4], forkArray[0])
             //};
-
             //for (int i = 0; i < philosophList.Count; i++)
             //{
             //    Thread thread = new Thread(philosophList[i].TakeFork);
             //    thread.Start();
             //}
 
-            Consumer consumer = new Consumer(buffer);
-            Producer producer = new Producer(buffer);
+            //Producer Consumer
+            //Consumer consumer = new Consumer(buffer);
+            //Producer producer = new Producer(buffer);
             //Thread consumerThread = new Thread(consumer.TakeGoods);
-            Thread producerThread = new Thread(producer.produceGood);
-
+            //Thread producerThread = new Thread(producer.produceGood);
             //consumerThread.Start();
-            producerThread.Start();
+            //producerThread.Start();
 
             Console.ReadKey();
         }
@@ -74,6 +73,8 @@ namespace ThreadSynchronizationH2
         //        Monitor.Exit(_lock);
         //    }
         //}
+
+
         //static bool doStars = false;
         //static void WriteStars()
         //{
@@ -125,6 +126,7 @@ namespace ThreadSynchronizationH2
         //        }
         //    }
         //}
+
 
         //public static void FillForkArray()
         //{
